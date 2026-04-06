@@ -8,12 +8,17 @@ import Link from 'next/link'
 export const revalidate = 60
 
 export async function generateStaticParams() {
-  const projects = await getProjects()
-  return projects.map((p) => ({ slug: p.slug }))
+  try {
+    const projects = await getProjects()
+    return projects.map((p) => ({ slug: p.slug }))
+  } catch {
+    return []
+  }
 }
 
-export default async function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = await getProjectBySlug(params.slug)
+export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const project = await getProjectBySlug(slug).catch(() => null)
   if (!project) notFound()
 
   return (
