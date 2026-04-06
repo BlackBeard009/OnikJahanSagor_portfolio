@@ -13,6 +13,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@supabase/supabase-js": "^2.101.1",
     "@uiw/react-md-editor": "^4.1.0",
+    "autoprefixer": "^10.4.27",
     "clsx": "^2.1.1",
     "lucide-react": "^1.7.0",
     "next": "16.2.2",
@@ -26,7 +27,6 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@testing-library/user-event": "^14.6.1",
@@ -39,7 +39,7 @@
     "eslint-config-next": "16.2.2",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
-    "tailwindcss": "^4",
+    "tailwindcss": "^3.4.19",
     "ts-jest": "^29.4.9",
     "typescript": "^5"
   }
