@@ -4,7 +4,10 @@ import type { About } from '@/types'
 export async function getAbout(): Promise<About | null> {
   const db = createAdminClient()
   const { data, error } = await db.from('about').select('*').limit(1).single()
-  if (error) return null
+  if (error) {
+    if ((error as { code?: string }).code === 'PGRST116') return null  // no rows found
+    throw new Error(error.message)
+  }
   return data
 }
 

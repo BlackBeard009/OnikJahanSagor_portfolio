@@ -29,7 +29,10 @@ export async function getProjectBySlug(slug: string): Promise<Project | null> {
     .select('*')
     .eq('slug', slug)
     .single()
-  if (error) return null
+  if (error) {
+    if ((error as { code?: string }).code === 'PGRST116') return null  // no rows found
+    throw new Error(error.message)
+  }
   return data
 }
 
