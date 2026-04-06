@@ -1,3 +1,4 @@
+'use client'
 import { About } from '@/types'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
