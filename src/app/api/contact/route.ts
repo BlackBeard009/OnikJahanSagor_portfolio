@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
     if (!parsed.success) {
       return NextResponse.json({ error: parsed.error.flatten() }, { status: 400 })
     }
-    await createMessage(parsed.data)
+    await createMessage({ ...parsed.data, subject: parsed.data.subject ?? null })
     return NextResponse.json({ success: true }, { status: 201 })
   } catch {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
