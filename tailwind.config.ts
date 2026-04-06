@@ -7,7 +7,29 @@ const config: Config = {
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        cyan: {
+          DEFAULT: '#0dccf2',
+          dark: '#0aa8c8',
+        },
+        dark: {
+          DEFAULT: '#0a0a14',
+          card: '#12121f',
+          border: '#1e1e35',
+        },
+      },
+      fontFamily: {
+        sans: ['var(--font-inter)', 'sans-serif'],
+        mono: ['var(--font-mono)', 'monospace'],
+      },
+      backdropBlur: {
+        xs: '2px',
+      },
+      borderRadius: {
+        DEFAULT: '8px',
+      },
+    },
   },
   plugins: [],
 }
