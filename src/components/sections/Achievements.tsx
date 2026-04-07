@@ -57,6 +57,8 @@ export function Achievements({ achievements }: AchievementsProps) {
     (sum, a) => sum + (a.problems_solved ?? 0), 0
   )
 
+  if (!achievements.length) return null
+
   return (
     <section id="achievements" className="w-full">
       {/* Section header */}
