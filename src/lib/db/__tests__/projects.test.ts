@@ -12,6 +12,7 @@ const mockProject: Project = {
   slug: 'my-project',
   description: 'A cool project',
   tech_stack: ['TypeScript', 'React'],
+  highlights: [],
   image_url: null,
   github_url: null,
   live_url: null,

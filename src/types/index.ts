@@ -4,6 +4,7 @@ export interface Project {
   slug: string
   description: string | null
   tech_stack: string[]
+  highlights: string[]
   image_url: string | null
   github_url: string | null
   live_url: string | null
@@ -32,7 +33,9 @@ export interface Achievement {
   problems_solved: number | null
   badge: string | null
   profile_url: string | null
-  category: string | null
+  category: string | null   // 'rating' | 'team' | 'individual'
+  value: string | null      // right-side text for individual cards
+  color: string | null      // tailwind color key
   order: number
 }
 
@@ -62,6 +65,7 @@ export interface SocialLinks {
   github?: string
   linkedin?: string
   twitter?: string
+  codeforces?: string
   email?: string
   [key: string]: string | undefined
 }
