@@ -5,6 +5,7 @@ CREATE TABLE projects (
   slug        text UNIQUE NOT NULL,
   description text,
   tech_stack  text[] DEFAULT '{}',
+  highlights  text[] DEFAULT '{}',
   image_url   text,
   github_url  text,
   live_url    text,
@@ -36,6 +37,8 @@ CREATE TABLE achievements (
   badge           text,
   profile_url     text,
   category        text,
+  value           text,
+  color           text,
   "order"         integer DEFAULT 0
 );
 
