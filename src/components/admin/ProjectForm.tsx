@@ -11,11 +11,10 @@ const schema = z.object({
   slug: z.string().min(1),
   description: z.string().optional(),
   tech_stack: z.string(),
-  image_url: z.string().optional(),
+  highlights: z.string(),
   github_url: z.string().optional(),
   live_url: z.string().optional(),
   featured: z.boolean().optional(),
-  order: z.number().optional(),
 })
 
 type FormData = z.infer<typeof schema>
@@ -34,11 +33,10 @@ export function ProjectForm({ initial, onSubmit, onCancel }: ProjectFormProps) {
       slug: initial?.slug ?? '',
       description: initial?.description ?? '',
       tech_stack: initial?.tech_stack?.join(', ') ?? '',
-      image_url: initial?.image_url ?? '',
+      highlights: initial?.highlights?.join('\n') ?? '',
       github_url: initial?.github_url ?? '',
       live_url: initial?.live_url ?? '',
       featured: initial?.featured ?? false,
-      order: initial?.order ?? 0,
     },
   })
 
@@ -46,6 +44,7 @@ export function ProjectForm({ initial, onSubmit, onCancel }: ProjectFormProps) {
     await onSubmit({
       ...data,
       tech_stack: data.tech_stack.split(',').map((s) => s.trim()).filter(Boolean),
+      highlights: data.highlights.split('\n').map((s) => s.trim()).filter(Boolean),
     })
   }
 
@@ -57,11 +56,19 @@ export function ProjectForm({ initial, onSubmit, onCancel }: ProjectFormProps) {
       </div>
       <Input label="Description" {...register('description')} />
       <Input label="Tech Stack (comma-separated)" placeholder="React, TypeScript, Node.js" {...register('tech_stack')} />
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm text-gray-300 font-medium">Highlights (one per line)</label>
+        <textarea
+          {...register('highlights')}
+          rows={4}
+          placeholder="Built with React and TypeScript&#10;Deployed on Vercel with CI/CD"
+          className="bg-dark-card border border-dark-border rounded-lg px-4 py-2.5 text-white placeholder-gray-500 focus:outline-none focus:border-cyan/50 text-sm resize-none"
+        />
+      </div>
       <div className="grid grid-cols-2 gap-4">
         <Input label="GitHub URL" {...register('github_url')} />
         <Input label="Live URL" {...register('live_url')} />
       </div>
-      <Input label="Image URL" {...register('image_url')} />
       <div className="flex items-center gap-3">
         <input type="checkbox" id="featured" {...register('featured')} className="accent-cyan" />
         <label htmlFor="featured" className="text-sm text-gray-300">Featured on homepage</label>
