@@ -7,11 +7,32 @@
     scroll-behavior: smooth;
   }
   body {
-    @apply bg-dark text-white font-sans antialiased;
+    @apply bg-background-dark text-white font-sans antialiased overflow-x-hidden;
   }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar { width: 8px; }
+  ::-webkit-scrollbar-track { background: #102023; }
+  ::-webkit-scrollbar-thumb { background: #224249; border-radius: 4px; }
+  ::-webkit-scrollbar-thumb:hover { background: #315f68; }
 }
 
 @layer components {
+  /* New design system */
+  .glass-card {
+    background: rgba(22, 40, 44, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+  }
+  .timeline-line {
+    box-shadow: 0 0 8px rgba(13, 204, 242, 0.6);
+  }
+  .cp-grid-bg {
+    background-image: radial-gradient(circle at 1px 1px, rgba(13, 204, 242, 0.1) 1px, transparent 0);
+    background-size: 20px 20px;
+  }
+
+  /* Legacy — kept for admin/blog pages */
   .glass {
     @apply bg-dark-card/60 backdrop-blur-md border border-dark-border;
   }
