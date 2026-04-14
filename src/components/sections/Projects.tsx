@@ -38,10 +38,10 @@ export function Projects({ projects, about }: ProjectsProps) {
                   href={project.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 bg-background-dark rounded-full hover:text-primary transition-colors"
+                  className="size-9 inline-flex items-center justify-center bg-background-dark rounded-full hover:text-primary transition-colors"
                   title="View Code"
                 >
-                  <span className="material-symbols-outlined text-lg">code</span>
+                  <span className="material-symbols-outlined text-lg leading-none">code</span>
                 </a>
               )}
               {project.live_url && (
@@ -49,10 +49,10 @@ export function Projects({ projects, about }: ProjectsProps) {
                   href={project.live_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="p-2 bg-background-dark rounded-full hover:text-primary transition-colors"
+                  className="size-9 inline-flex items-center justify-center bg-background-dark rounded-full hover:text-primary transition-colors"
                   title="Live Demo"
                 >
-                  <span className="material-symbols-outlined text-lg">open_in_new</span>
+                  <span className="material-symbols-outlined text-lg leading-none">open_in_new</span>
                 </a>
               )}
             </div>
