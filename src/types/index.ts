@@ -23,6 +23,7 @@ export interface Experience {
   achievements: string[]
   logo_url: string | null
   order: number
+  created_at: string
 }
 
 export interface Achievement {

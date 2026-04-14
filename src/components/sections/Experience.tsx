@@ -68,6 +68,16 @@ export function Experience({ experience }: ExperienceProps) {
                 {exp.description && (
                   <p className="text-gray-400 text-sm leading-relaxed">{exp.description}</p>
                 )}
+                {exp.achievements && exp.achievements.length > 0 && (
+                  <ul className="mt-3 space-y-1">
+                    {exp.achievements.map((ach, i) => (
+                      <li key={i} className="flex items-start gap-2 text-sm text-gray-400">
+                        <span className="material-symbols-outlined text-primary text-base mt-0.5">arrow_right</span>
+                        <span>{ach}</span>
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
             </React.Fragment>
           )
