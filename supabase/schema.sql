@@ -24,7 +24,8 @@ CREATE TABLE experience (
   description  text,
   achievements text[] DEFAULT '{}',
   logo_url     text,
-  "order"      integer DEFAULT 0
+  "order"      integer DEFAULT 0,
+  created_at   timestamptz DEFAULT now()
 );
 
 -- Competitive programming achievements
