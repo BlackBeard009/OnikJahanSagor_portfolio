@@ -10,12 +10,17 @@ const RATING_PLATFORMS = ['Codeforces', 'LeetCode', 'CodeChef', 'AtCoder'] as co
 const BADGE_OPTIONS    = ['globe', 'flag', 'leaderboard', 'trophy'] as const
 const COLOR_OPTIONS    = ['blue', 'indigo', 'primary', 'purple', 'green', 'yellow', 'orange'] as const
 
+// Empty number inputs produce NaN via valueAsNumber. Coerce NaN to null so
+// optional numeric fields don't silently block form submission.
+const nanToNull = (v: unknown) =>
+  typeof v === 'number' && Number.isNaN(v) ? null : v
+
 const schema = z.object({
   category:        z.enum(['rating', 'team', 'individual']),
   platform:        z.string().min(1),
   rank:            z.string().optional(),
-  rating:          z.number().nullable().optional(),
-  problems_solved: z.number().nullable().optional(),
+  rating:          z.preprocess(nanToNull, z.number().nullable().optional()),
+  problems_solved: z.preprocess(nanToNull, z.number().nullable().optional()),
   badge:           z.string().optional(),
   value:           z.string().optional(),
   color:           z.string().optional(),
@@ -127,7 +132,7 @@ export function AchievementForm({ initial, onSubmit, onCancel }: AchievementForm
       )}
 
       <Input label="Profile URL (optional)" {...register('profile_url')} />
-      <Input label="Order" type="number" {...register('order', { valueAsNumber: true })} />
+      <Input label="Order" type="number" error={errors.order?.message} {...register('order', { valueAsNumber: true })} />
 
       <div className="flex gap-3 justify-end mt-2">
         <Button type="button" variant="ghost" onClick={onCancel}>Cancel</Button>
