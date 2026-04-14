@@ -10,17 +10,16 @@ const RATING_PLATFORMS = ['Codeforces', 'LeetCode', 'CodeChef', 'AtCoder'] as co
 const BADGE_OPTIONS    = ['globe', 'flag', 'leaderboard', 'trophy'] as const
 const COLOR_OPTIONS    = ['blue', 'indigo', 'primary', 'purple', 'green', 'yellow', 'orange'] as const
 
-// Empty number inputs produce NaN via valueAsNumber. Coerce NaN to null so
-// optional numeric fields don't silently block form submission.
-const nanToNull = (v: unknown) =>
-  typeof v === 'number' && Number.isNaN(v) ? null : v
-
 const schema = z.object({
   category:        z.enum(['rating', 'team', 'individual']),
   platform:        z.string().min(1),
   rank:            z.string().optional(),
-  rating:          z.preprocess(nanToNull, z.number().nullable().optional()),
-  problems_solved: z.preprocess(nanToNull, z.number().nullable().optional()),
+  // Empty number inputs produce NaN via valueAsNumber when unmounted (e.g.
+  // rating/problems_solved fields hidden for team/individual categories).
+  // .catch(null) coerces any parse failure (NaN) to null so submission isn't
+  // silently blocked without any visible error.
+  rating:          z.number().nullable().optional().catch(null),
+  problems_solved: z.number().nullable().optional().catch(null),
   badge:           z.string().optional(),
   value:           z.string().optional(),
   color:           z.string().optional(),
