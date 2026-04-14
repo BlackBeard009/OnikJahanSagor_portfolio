@@ -35,7 +35,7 @@ const selectClass =
   'bg-dark-card border border-dark-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-cyan/50 text-sm w-full'
 
 export function AchievementForm({ initial, onSubmit, onCancel }: AchievementFormProps) {
-  const { register, handleSubmit, control, formState: { isSubmitting } } = useForm<FormData>({
+  const { register, handleSubmit, control, formState: { isSubmitting, errors } } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
       category:        (initial?.category as 'rating' | 'team' | 'individual') ?? 'rating',
@@ -78,6 +78,7 @@ export function AchievementForm({ initial, onSubmit, onCancel }: AchievementForm
         <Input
           label="Platform"
           placeholder={category === 'team' ? 'ICPC Asia West Regional' : 'Codeforces'}
+          error={errors.platform?.message}
           {...register('platform')}
         />
       )}
@@ -90,6 +91,7 @@ export function AchievementForm({ initial, onSubmit, onCancel }: AchievementForm
           category === 'team'       ? 'Top 10, Regionals 2024' :
                                       'Solved 500+ problems'
         }
+        error={errors.rank?.message}
         {...register('rank')}
       />
 
