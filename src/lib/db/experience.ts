@@ -6,7 +6,7 @@ export async function getExperience(): Promise<Experience[]> {
   const { data, error } = await db
     .from('experience')
     .select('*')
-    .order('created_at', { ascending: false })
+    .order('end_date', { ascending: false, nullsFirst: true })
   if (error) throw new Error(error.message)
   return data ?? []
 }
