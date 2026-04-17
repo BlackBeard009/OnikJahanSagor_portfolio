@@ -94,7 +94,7 @@ export function AboutForm({ initial, onSubmit }: AboutFormProps) {
               <input
                 type="file"
                 accept=".pdf,application/pdf"
-                onChange={(e) => setResumeFile(e.target.files?.[0] ?? null)}
+                onChange={(e) => { setResumeFile(e.target.files?.[0] ?? null); setUploadError(null) }}
                 className="text-sm text-gray-300 file:mr-3 file:py-1.5 file:px-3 file:rounded file:border-0 file:text-xs file:font-medium file:bg-primary/20 file:text-primary hover:file:bg-primary/30 cursor-pointer"
               />
               {uploadError && (
