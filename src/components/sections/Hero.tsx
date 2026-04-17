@@ -100,7 +100,8 @@ export function Hero({ about }: HeroProps) {
           {about?.resume_url ? (
             <a
               href={about.resume_url}
-              download
+              target="_blank"
+              rel="noopener noreferrer"
               className="h-12 px-6 bg-transparent border border-gray-600 hover:border-primary text-gray-300 hover:text-white rounded-lg font-bold text-base transition-all hover:bg-primary/5 flex items-center"
             >
               Download CV
