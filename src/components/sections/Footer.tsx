@@ -1,4 +1,5 @@
 import { About } from '@/types'
+import { LinkedInIcon, GitHubIcon, CodeforcesIcon } from '@/components/icons/SocialIcons'
 
 interface FooterProps {
   about: About | null
@@ -40,7 +41,7 @@ export function Footer({ about }: FooterProps) {
                   rel="noopener noreferrer"
                   className="size-10 rounded-full bg-[#16282c] border border-[#224249] flex items-center justify-center text-gray-400 hover:text-white hover:border-primary hover:bg-primary transition-all duration-300"
                 >
-                  <span className="material-symbols-outlined text-xl">work</span>
+                  <LinkedInIcon />
                 </a>
               )}
               {socialLinks.github && (
@@ -51,7 +52,7 @@ export function Footer({ about }: FooterProps) {
                   rel="noopener noreferrer"
                   className="size-10 rounded-full bg-[#16282c] border border-[#224249] flex items-center justify-center text-gray-400 hover:text-white hover:border-primary hover:bg-primary transition-all duration-300"
                 >
-                  <span className="material-symbols-outlined text-xl">terminal</span>
+                  <GitHubIcon />
                 </a>
               )}
               {socialLinks.codeforces && (
@@ -62,7 +63,7 @@ export function Footer({ about }: FooterProps) {
                   rel="noopener noreferrer"
                   className="size-10 rounded-full bg-[#16282c] border border-[#224249] flex items-center justify-center text-gray-400 hover:text-white hover:border-primary hover:bg-primary transition-all duration-300"
                 >
-                  <span className="material-symbols-outlined text-xl">bar_chart</span>
+                  <CodeforcesIcon />
                 </a>
               )}
             </div>
