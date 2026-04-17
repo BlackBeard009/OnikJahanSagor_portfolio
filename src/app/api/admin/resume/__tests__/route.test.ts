@@ -92,4 +92,30 @@ describe('POST /api/admin/resume', () => {
     expect(res.status).toBe(500)
     expect(res.body).toEqual({ error: 'bucket not found' })
   })
+
+  it('returns 200 with url when getAbout returns null', async () => {
+    ;(getAbout as jest.Mock).mockResolvedValue(null)
+    const req = makeRequest(makePdf())
+    const res = await POST(req)
+    expect(res.status).toBe(200)
+    expect(res.body).toEqual({ url: PUBLIC_URL })
+    expect(updateAbout).not.toHaveBeenCalled()
+  })
+
+  it('returns 500 when updateAbout throws', async () => {
+    ;(updateAbout as jest.Mock).mockRejectedValue(new Error('DB error'))
+    const req = makeRequest(makePdf())
+    const res = await POST(req)
+    expect(res.status).toBe(500)
+    expect(res.body).toEqual({ error: 'Internal server error' })
+  })
+
+  it('returns 413 when file exceeds 5 MB', async () => {
+    const bigFile = new File([new Uint8Array(6 * 1024 * 1024)], 'big.pdf', { type: 'application/pdf' })
+    const req = makeRequest(bigFile)
+    const res = await POST(req)
+    expect(res.status).toBe(413)
+    expect(res.body).toEqual({ error: 'File too large (max 5 MB)' })
+    expect(mockUpload).not.toHaveBeenCalled()
+  })
 })
