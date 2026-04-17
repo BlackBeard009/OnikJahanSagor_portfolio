@@ -28,6 +28,7 @@ interface AboutFormProps {
 export function AboutForm({ initial, onSubmit }: AboutFormProps) {
   const [resumeFile, setResumeFile] = useState<File | null>(null)
   const [uploadError, setUploadError] = useState<string | null>(null)
+  const [liveResumeUrl, setLiveResumeUrl] = useState<string | null>(initial?.resume_url ?? null)
 
   const { register, handleSubmit, formState: { isSubmitting } } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -55,6 +56,8 @@ export function AboutForm({ initial, onSubmit }: AboutFormProps) {
         setUploadError(json.error ?? 'Upload failed')
         return
       }
+      const { url } = await res.json()
+      setLiveResumeUrl(url)
     }
 
     let education = initial?.education ?? []
@@ -100,9 +103,9 @@ export function AboutForm({ initial, onSubmit }: AboutFormProps) {
               {uploadError && (
                 <p className="text-red-400 text-xs">{uploadError}</p>
               )}
-              {initial?.resume_url ? (
+              {liveResumeUrl ? (
                 <a
-                  href={initial.resume_url}
+                  href={liveResumeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-xs text-cyan-400 hover:underline"
