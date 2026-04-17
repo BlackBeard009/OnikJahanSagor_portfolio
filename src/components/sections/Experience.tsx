@@ -72,7 +72,7 @@ export function Experience({ experience }: ExperienceProps) {
                   <ul className="mt-3 space-y-1">
                     {exp.achievements.map((ach, i) => (
                       <li key={i} className="flex items-start gap-2 text-sm text-gray-400">
-                        <span className="material-symbols-outlined text-primary text-base leading-none shrink-0 mt-[3px]">arrow_right</span>
+                        <span className="material-symbols-outlined text-primary text-base leading-none shrink-0 -mt-[1px]">arrow_right</span>
                         <span>{ach}</span>
                       </li>
                     ))}
