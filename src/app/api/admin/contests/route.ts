@@ -1,13 +1,14 @@
 import { NextResponse } from 'next/server'
-import { getSkills, createSkill } from '@/lib/db/skills'
+import { getContests, createContest } from '@/lib/db/contests'
 
 export async function GET() {
-  try { return NextResponse.json(await getSkills()) }
+  try { return NextResponse.json(await getContests()) }
   catch (e) { return NextResponse.json({ error: 'Failed' }, { status: 500 }) }
 }
 
 export async function POST(req: Request) {
   try {
-    return NextResponse.json(await createSkill(await req.json()), { status: 201 })
+    const body = await req.json()
+    return NextResponse.json(await createContest(body), { status: 201 })
   } catch (e) { return NextResponse.json({ error: 'Failed' }, { status: 500 }) }
 }
