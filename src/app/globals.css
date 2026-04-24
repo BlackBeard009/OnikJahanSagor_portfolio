@@ -526,3 +526,65 @@ footer { margin-top: 80px; padding: 64px 0 32px; border-top: 1px solid var(--lin
   font-size: 24px; font-weight: 500; letter-spacing: -0.02em;
   margin: 0 0 32px; color: var(--ink);
 }
+
+/* ---- Admin forms ---- */
+.admin-form { display: flex; flex-direction: column; gap: 20px; max-width: 680px; }
+.field-group { display: flex; flex-direction: column; gap: 6px; }
+.field-label { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.08em; text-transform: uppercase; }
+.field-input, .field-textarea, .field-select {
+  width: 100%; padding: 9px 12px;
+  background: var(--bg-elev); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 2px;
+  font-family: var(--font-sans); font-size: 14px;
+  transition: border-color .15s; outline: none;
+}
+.field-input:focus, .field-textarea:focus, .field-select:focus { border-color: var(--accent); }
+.field-textarea { resize: vertical; min-height: 100px; line-height: 1.5; }
+.field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.admin-save-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 20px; background: var(--ink); color: var(--bg);
+  border: none; cursor: pointer; font-family: var(--font-mono); font-size: 12px;
+  transition: background .15s; align-self: flex-start;
+}
+.admin-save-btn:hover { background: var(--accent-ink); }
+.admin-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.admin-status { font-family: var(--font-mono); font-size: 12px; color: var(--good); }
+.admin-error { font-family: var(--font-mono); font-size: 12px; color: var(--red); }
+.chips-wrap { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.chip-tag {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 4px 8px; border: 1px solid var(--line);
+  font-family: var(--font-mono); font-size: 11px; color: var(--ink-2);
+  background: var(--bg-elev); border-radius: 2px;
+}
+.chip-tag button { background: none; border: none; color: var(--ink-4); cursor: pointer; padding: 0; line-height: 1; font-size: 14px; }
+.chip-tag button:hover { color: var(--red); }
+.upload-zone {
+  border: 1px dashed var(--line); padding: 20px; text-align: center;
+  font-family: var(--font-mono); font-size: 12px; color: var(--ink-3);
+  cursor: pointer; transition: border-color .15s;
+}
+.upload-zone:hover { border-color: var(--accent); }
+.upload-preview { width: 80px; height: 80px; object-fit: cover; border: 1px solid var(--line); }
+
+/* ---- Admin generic helpers ---- */
+.admin-input {
+  width: 100%; padding: 8px 10px;
+  background: var(--bg-elev); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 2px;
+  font-family: var(--font-sans); font-size: 13px; outline: none;
+}
+.admin-input:focus { border-color: var(--accent); }
+.admin-label { font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 4px; display: block; }
+.admin-modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; font-weight: 500; font-size: 16px; }
+.admin-modal-footer { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+.admin-item-actions { display: flex; gap: 6px; flex-shrink: 0; }
+.admin-tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--line); }
+.admin-tab { font-family: var(--font-mono); font-size: 12px; padding: 8px 14px; background: none; border: none; color: var(--ink-3); cursor: pointer; border-bottom: 1.5px solid transparent; margin-bottom: -1px; }
+.admin-tab.active { color: var(--ink); border-bottom-color: var(--accent); }
+.admin-cat-btn { width: 100%; text-align: left; padding: 8px 10px; background: none; border: none; border-left: 2px solid var(--line); color: var(--ink-3); font-family: var(--font-mono); font-size: 12px; cursor: pointer; margin-bottom: 2px; transition: all .15s; }
+.admin-cat-btn.active { color: var(--ink); border-left-color: var(--accent); background: var(--accent-soft); }
+.admin-skill-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--line); }
+.skill-dot-btn { background: none; border: none; cursor: pointer; font-size: 14px; color: var(--ink-4); padding: 2px; }
+.admin-list-num { font-family: var(--font-mono); font-weight: 700; color: var(--accent); margin-right: 8px; font-size: 18px; }
