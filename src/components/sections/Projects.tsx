@@ -1,99 +1,97 @@
-import { Project, About } from '@/types'
+import { ExternalLink } from 'lucide-react'
 
-interface ProjectsProps {
-  projects: Project[]
-  about: About | null
-}
-
-export function Projects({ projects, about }: ProjectsProps) {
-  const githubUrl = about?.social_links?.github ?? '#'
-
+function GithubIcon({ size = 14 }: { size?: number }) {
   return (
-    <section id="projects" className="flex flex-col gap-8">
-      <div className="flex items-center justify-between">
-        <h3 className="text-3xl font-bold text-white flex items-center gap-3">
-          <span className="material-symbols-outlined text-primary text-4xl">rocket_launch</span>
-          Featured Projects
-        </h3>
-        <a
-          href={githubUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="text-primary hover:text-white transition-colors text-sm font-bold flex items-center gap-1"
-        >
-          View GitHub <span className="material-symbols-outlined text-lg">arrow_forward</span>
-        </a>
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 2C6.477 2 2 6.477 2 12c0 4.418 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.009-.868-.013-1.703-2.782.604-3.369-1.341-3.369-1.341-.454-1.154-1.11-1.462-1.11-1.462-.908-.62.069-.608.069-.608 1.003.07 1.531 1.03 1.531 1.03.892 1.529 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.578 9.578 0 0112 6.836c.85.004 1.705.114 2.504.336 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z" />
+    </svg>
+  )
+}
+import Chip from '@/components/ui/Chip'
+import ProjectCarousel from './ProjectCarousel'
+import type { Project } from '@/types'
+
+function ProjectCard({ p }: { p: Project }) {
+  return (
+    <article className="project card bracket">
+      <span className="br-bl" /><span className="br-br" />
+      <div className="p-body">
+        <div className="p-head">
+          <div>
+            <div className="p-num">PROJECT · {p.num}</div>
+            <div className="p-title" style={{ marginTop: 6 }}>{p.title}</div>
+          </div>
+          <div style={{ display: 'flex', gap: 6 }}>
+            {p.github_url && (
+              <a className="icon-btn" href={p.github_url} target="_blank" rel="noreferrer" title="GitHub">
+                <GithubIcon size={14} />
+              </a>
+            )}
+            {p.live_url && (
+              <a className="icon-btn" href={p.live_url} target="_blank" rel="noreferrer" title="Live">
+                <ExternalLink size={14} />
+              </a>
+            )}
+          </div>
+        </div>
+
+        {p.tagline && (
+          <div style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', fontSize: 17, color: 'var(--ink-2)', lineHeight: 1.35 }}>
+            {p.tagline}
+          </div>
+        )}
+
+        <div className="p-desc">{p.description}</div>
+
+        {p.bullets?.length > 0 && (
+          <ul className="p-bullets">
+            {p.bullets.map((b, i) => (
+              <li key={i}><b>{b.b}:</b> {b.t}</li>
+            ))}
+          </ul>
+        )}
+
+        {p.stack?.length > 0 && (
+          <div className="p-stack">
+            {p.stack.map((s) => <Chip key={s}>{s}</Chip>)}
+          </div>
+        )}
+
+        <div className="p-actions">
+          {p.github_url && (
+            <a className="btn primary" href={p.github_url} target="_blank" rel="noreferrer">
+              <GithubIcon size={12} />
+              <span>Source</span>
+              <span style={{ color: 'var(--accent)', marginLeft: 6 }}>→</span>
+            </a>
+          )}
+          {p.live_url && (
+            <a className="btn" href={p.live_url} target="_blank" rel="noreferrer">
+              <span>Live</span>
+              <ExternalLink size={12} />
+            </a>
+          )}
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {projects.map((project) => (
-          <div
-            key={project.id}
-            className="group relative bg-[#16282c] rounded-xl border border-[#224249] p-6 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 overflow-hidden flex flex-col"
-          >
-            {/* Hover-reveal action icons */}
-            <div className="absolute top-0 right-0 p-4 opacity-0 group-hover:opacity-100 transition-opacity flex gap-2">
-              {project.github_url && (
-                <a
-                  href={project.github_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="size-9 inline-flex items-center justify-center bg-background-dark rounded-full hover:text-primary transition-colors"
-                  title="View Code"
-                >
-                  <span className="material-symbols-outlined text-lg leading-none">code</span>
-                </a>
-              )}
-              {project.live_url && (
-                <a
-                  href={project.live_url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="size-9 inline-flex items-center justify-center bg-background-dark rounded-full hover:text-primary transition-colors"
-                  title="Live Demo"
-                >
-                  <span className="material-symbols-outlined text-lg leading-none">open_in_new</span>
-                </a>
-              )}
-            </div>
+      <ProjectCarousel images={p.images ?? []} title={p.title} />
+    </article>
+  )
+}
 
-            {/* Title */}
-            <div className="mb-4">
-              <h4 className="text-xl font-bold text-white group-hover:text-primary transition-colors">
-                {project.title}
-              </h4>
-              {project.tech_stack.length > 0 && (
-                <p className="text-xs text-gray-500 font-mono mt-1">{project.tech_stack[0]}</p>
-              )}
-            </div>
+export default function Projects({ projects }: { projects: Project[] }) {
+  return (
+    <section className="section container" id="projects">
+      <div className="section-head">
+        <div>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 04 — Things I&apos;ve made</div>
+          <h2>Personal projects</h2>
+        </div>
+        <div className="idx">{projects.length} projects</div>
+      </div>
 
-            {/* Description */}
-            {project.description && (
-              <p className="text-gray-300 text-sm mb-6 leading-relaxed">{project.description}</p>
-            )}
-
-            {/* Highlights */}
-            {project.highlights && project.highlights.length > 0 && (
-              <ul className="space-y-2 mb-6">
-                {project.highlights.map((highlight, i) => (
-                  <li key={i} className="flex items-start gap-2 text-sm text-gray-400">
-                    <span className="material-symbols-outlined text-primary text-base shrink-0 mt-[2px]">check_circle</span>
-                    <span>{highlight}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-
-            {/* Tech stack badges */}
-            <div className="flex flex-wrap gap-2 mt-auto">
-              {project.tech_stack.map((tech) => (
-                <span key={tech} className="text-xs font-bold text-primary bg-primary/10 px-2 py-1 rounded">
-                  {tech}
-                </span>
-              ))}
-            </div>
-          </div>
-        ))}
+      <div className="projects">
+        {projects.map((p) => <ProjectCard key={p.id} p={p} />)}
       </div>
     </section>
   )

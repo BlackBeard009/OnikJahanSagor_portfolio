@@ -1,47 +1,52 @@
 import { notFound } from 'next/navigation'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
-import { getBlogPostBySlug, getBlogPosts } from '@/lib/db/blog'
-import { GlassCard } from '@/components/ui/GlassCard'
-import Link from 'next/link'
-import { Button } from '@/components/ui/Button'
+import { getPostBySlug, getPublishedPosts } from '@/lib/db/posts'
 
-export const revalidate = 60
+interface Props {
+  params: Promise<{ slug: string }>
+}
+
+export const dynamic = 'force-dynamic'
 
 export async function generateStaticParams() {
   try {
-    const posts = await getBlogPosts()
+    const posts = await getPublishedPosts()
     return posts.map((p) => ({ slug: p.slug }))
   } catch {
     return []
   }
 }
 
-export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({ params }: Props) {
   const { slug } = await params
-  const post = await getBlogPostBySlug(slug).catch(() => null)
-  if (!post || !post.published) notFound()
+  const post = await getPostBySlug(slug)
+  if (!post) return {}
+  return { title: post.title, description: post.excerpt }
+}
+
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params
+  const post = await getPostBySlug(slug)
+  if (!post) notFound()
 
   return (
-    <div className="max-w-3xl mx-auto px-6 py-16">
-      <Link href="/blog">
-        <Button variant="ghost" size="sm" className="mb-8">← Back to Blog</Button>
-      </Link>
-
-      <GlassCard>
-        {post.cover_image && (
-          <img src={post.cover_image} alt={post.title} className="w-full h-56 object-cover rounded-lg mb-6" />
-        )}
-        <h1 className="text-3xl font-bold text-white mb-2">{post.title}</h1>
-        {post.published_at && (
-          <p className="text-gray-500 text-sm mb-8">
-            {new Date(post.published_at).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}
-          </p>
-        )}
-        <div className="prose prose-invert prose-cyan max-w-none">
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>{post.content ?? ''}</ReactMarkdown>
+    <main>
+      <article className="post-reader">
+        <div className="post-meta">
+          <span style={{ color: 'var(--accent-ink)', fontWeight: 600 }}>{post.tag}</span>
+          <span>{post.date_label}</span>
+          <span>{post.read_time}</span>
         </div>
-      </GlassCard>
-    </div>
+
+        <h1>{post.title}</h1>
+
+        <div className="body">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {post.body}
+          </ReactMarkdown>
+        </div>
+      </article>
+    </main>
   )
 }
