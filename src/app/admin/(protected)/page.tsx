@@ -1,38 +1,59 @@
+import { getProfile } from '@/lib/db/profile'
+import { getJudges } from '@/lib/db/judges'
+import { getContests } from '@/lib/db/contests'
+import { getSkills } from '@/lib/db/skills'
+import { getCareer } from '@/lib/db/career'
 import { getProjects } from '@/lib/db/projects'
-import { getMessages } from '@/lib/db/messages'
-import { getBlogPosts } from '@/lib/db/blog'
-import { getExperience } from '@/lib/db/experience'
-import { GlassCard } from '@/components/ui/GlassCard'
+import { getAllPosts } from '@/lib/db/posts'
+import { getCertifications } from '@/lib/db/certifications'
 
 export default async function AdminDashboard() {
-  const [projects, messages, posts, experience] = await Promise.all([
+  const [profile, judges, contests, skills, career, projects, posts, certs] = await Promise.all([
+    getProfile(),
+    getJudges(),
+    getContests(),
+    getSkills(),
+    getCareer(),
     getProjects(),
-    getMessages(),
-    getBlogPosts(false),
-    getExperience(),
+    getAllPosts(),
+    getCertifications(),
   ])
 
-  const unread = messages.filter((m) => !m.read).length
-
   const stats = [
-    { label: 'Projects', value: projects.length },
-    { label: 'Blog Posts', value: posts.length, sub: `${posts.filter((p) => p.published).length} published` },
-    { label: 'Messages', value: messages.length, sub: unread > 0 ? `${unread} unread` : 'All read', highlight: unread > 0 },
-    { label: 'Experience Entries', value: experience.length },
+    { label: 'Judges', value: judges.length, href: '/admin/judges' },
+    { label: 'Contests', value: contests.length, href: '/admin/contests' },
+    { label: 'Skills', value: skills.length, href: '/admin/skills' },
+    { label: 'Career', value: career.length, href: '/admin/career' },
+    { label: 'Projects', value: projects.length, href: '/admin/projects' },
+    { label: 'Posts', value: posts.length, sub: `${posts.filter(p => p.published).length} published`, href: '/admin/posts' },
+    { label: 'Certifications', value: certs.length, href: '/admin/certifications' },
   ]
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold text-white mb-8">Dashboard</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {stats.map((stat) => (
-          <GlassCard key={stat.label}>
-            <p className="text-gray-400 text-sm">{stat.label}</p>
-            <p className={`text-4xl font-bold mt-1 ${stat.highlight ? 'text-cyan' : 'text-white'}`}>{stat.value}</p>
-            {stat.sub && <p className="text-gray-500 text-xs mt-1">{stat.sub}</p>}
-          </GlassCard>
+    <>
+      <h1 className="admin-page-title">Dashboard</h1>
+      {profile && (
+        <div className="card" style={{ padding: '16px 20px', marginBottom: 24, display: 'flex', gap: 16, alignItems: 'center' }}>
+          {profile.avatar_url && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={profile.avatar_url} alt={profile.name ?? ''} style={{ width: 48, height: 48, borderRadius: '50%', objectFit: 'cover' }} />
+          )}
+          <div>
+            <div style={{ fontWeight: 600 }}>{profile.name || 'No name set'}</div>
+            <div style={{ color: 'var(--ink-3)', fontSize: 13 }}>{profile.title || 'No title set'}</div>
+          </div>
+          <a href="/admin/profile" className="btn ghost" style={{ marginLeft: 'auto' }}>Edit Profile</a>
+        </div>
+      )}
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: 12 }}>
+        {stats.map(s => (
+          <a key={s.label} href={s.href} className="card" style={{ padding: '20px 16px', textDecoration: 'none', display: 'block' }}>
+            <div style={{ fontSize: 32, fontWeight: 700, fontFamily: 'var(--font-mono)', color: 'var(--accent)' }}>{s.value}</div>
+            <div style={{ fontWeight: 600, marginTop: 4 }}>{s.label}</div>
+            {s.sub && <div style={{ color: 'var(--ink-4)', fontSize: 12, marginTop: 2 }}>{s.sub}</div>}
+          </a>
         ))}
       </div>
-    </div>
+    </>
   )
 }

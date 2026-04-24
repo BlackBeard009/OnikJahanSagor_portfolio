@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { getProjects, createProject } from '@/lib/db/projects'
 
 export async function GET() {
-  const projects = await getProjects()
-  return NextResponse.json(projects)
+  try { return NextResponse.json(await getProjects()) }
+  catch (e) { return NextResponse.json({ error: 'Failed' }, { status: 500 }) }
 }
 
-export async function POST(req: NextRequest) {
-  const body = await req.json()
-  const project = await createProject(body)
-  return NextResponse.json(project, { status: 201 })
+export async function POST(req: Request) {
+  try {
+    return NextResponse.json(await createProject(await req.json()), { status: 201 })
+  } catch (e) { return NextResponse.json({ error: 'Failed' }, { status: 500 }) }
 }

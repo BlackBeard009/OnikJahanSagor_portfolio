@@ -1,26 +1,25 @@
+// src/app/layout.tsx
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
-
 export const metadata: Metadata = {
-  title: 'Onik Jahan Sagor — Software Engineer',
-  description: 'Software engineer & competitive programmer portfolio',
+  title: 'Portfolio',
+  description: 'Software Engineer & Competitive Programmer',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${inter.variable} dark`}>
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap"
-          rel="stylesheet"
-        />
+        {/* Inline script runs before React to prevent theme flash */}
+        <script dangerouslySetInnerHTML={{ __html: `
+          try {
+            const t = localStorage.getItem('portfolio_theme');
+            document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+          } catch(e) {
+            document.documentElement.setAttribute('data-theme', 'dark');
+          }
+        ` }} />
       </head>
       <body>{children}</body>
     </html>

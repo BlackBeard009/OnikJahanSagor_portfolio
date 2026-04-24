@@ -1,15 +1,20 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { updateProject, deleteProject } from '@/lib/db/projects'
 
-export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const body = await req.json()
-  const project = await updateProject(id, body)
-  return NextResponse.json(project)
+interface Ctx { params: Promise<{ id: string }> }
+
+export async function PUT(req: Request, { params }: Ctx) {
+  try {
+    const { id } = await params
+    await updateProject(id, await req.json())
+    return NextResponse.json({ ok: true })
+  } catch (e) { return NextResponse.json({ error: 'Failed' }, { status: 500 }) }
 }
 
-export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  await deleteProject(id)
-  return NextResponse.json({ success: true })
+export async function DELETE(_req: Request, { params }: Ctx) {
+  try {
+    const { id } = await params
+    await deleteProject(id)
+    return NextResponse.json({ ok: true })
+  } catch (e) { return NextResponse.json({ error: 'Failed' }, { status: 500 }) }
 }

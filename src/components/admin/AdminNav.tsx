@@ -1,46 +1,62 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import {
+  User, Gauge, Trophy, Star, Briefcase, FolderOpen,
+  PenLine, Award, LayoutDashboard, LogOut
+} from 'lucide-react'
 import { signOut } from 'next-auth/react'
-import { clsx } from 'clsx'
 
 const links = [
-  { href: '/admin', label: 'Dashboard' },
-  { href: '/admin/projects', label: 'Projects' },
-  { href: '/admin/experience', label: 'Experience' },
-  { href: '/admin/achievements', label: 'Achievements' },
-  { href: '/admin/skills',       label: 'Skills' },
-  { href: '/admin/blog', label: 'Blog' },
-  { href: '/admin/messages', label: 'Messages' },
-  { href: '/admin/about', label: 'About' },
+  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
+  { href: '/admin/profile', label: 'Profile', icon: User },
+  { href: '/admin/judges', label: 'Judges', icon: Gauge },
+  { href: '/admin/contests', label: 'Contests', icon: Trophy },
+  { href: '/admin/skills', label: 'Skills', icon: Star },
+  { href: '/admin/career', label: 'Career', icon: Briefcase },
+  { href: '/admin/projects', label: 'Projects', icon: FolderOpen },
+  { href: '/admin/posts', label: 'Posts', icon: PenLine },
+  { href: '/admin/certifications', label: 'Certifications', icon: Award },
 ]
 
-export function AdminNav() {
+export default function AdminNav({ email }: { email: string }) {
   const pathname = usePathname()
 
   return (
-    <aside className="w-56 min-h-screen glass border-r border-dark-border flex flex-col p-4 gap-1">
-      <div className="text-cyan font-bold text-lg px-3 py-4 mb-2">Admin Panel</div>
-      {links.map((link) => (
-        <Link
-          key={link.href}
-          href={link.href}
-          className={clsx(
-            'px-3 py-2 rounded-lg text-sm transition-colors',
-            pathname === link.href
-              ? 'bg-cyan/10 text-cyan'
-              : 'text-gray-400 hover:text-white hover:bg-white/5'
-          )}
+    <aside className="admin-sidebar">
+      <div className="admin-sidebar-brand">
+        <span className="mark">◉ ADMIN</span>
+        <span style={{ color: 'var(--ink-4)' }}>portfolio cms</span>
+      </div>
+
+      <nav className="admin-nav-links">
+        {links.map(({ href, label, icon: Icon }) => {
+          const active = href === '/admin'
+            ? pathname === '/admin'
+            : pathname.startsWith(href)
+          return (
+            <Link
+              key={href}
+              href={href}
+              className={`admin-nav-link${active ? ' active' : ''}`}
+            >
+              <Icon size={14} />
+              {label}
+            </Link>
+          )
+        })}
+      </nav>
+
+      <div className="admin-sidebar-footer">
+        <div className="email">{email}</div>
+        <button
+          className="admin-signout-btn"
+          onClick={() => signOut({ callbackUrl: '/admin/login' })}
         >
-          {link.label}
-        </Link>
-      ))}
-      <button
-        onClick={() => signOut({ callbackUrl: '/' })}
-        className="mt-auto px-3 py-2 text-sm text-gray-500 hover:text-red-400 text-left transition-colors"
-      >
-        Sign Out
-      </button>
+          <LogOut size={11} style={{ display: 'inline', marginRight: 6 }} />
+          Sign out
+        </button>
+      </div>
     </aside>
   )
 }

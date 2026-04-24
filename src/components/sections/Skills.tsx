@@ -1,66 +1,85 @@
-import { Skill } from '@/types'
+'use client'
+import { useState } from 'react'
+import type { Skill } from '@/types'
+
+function groupByCategory(skills: Skill[]): Record<string, Skill[]> {
+  return skills.reduce<Record<string, Skill[]>>((acc, s) => {
+    if (!acc[s.category]) acc[s.category] = []
+    acc[s.category].push(s)
+    return acc
+  }, {})
+}
+
+function SkillPill({ skill }: { skill: Skill }) {
+  return (
+    <div className="skill-pill">
+      <span>{skill.name}</span>
+      <span className="lvl">
+        {[0, 1, 2, 3, 4].map((i) => (
+          <i key={i} className={i < skill.level ? 'on' : ''} />
+        ))}
+      </span>
+    </div>
+  )
+}
 
 interface SkillsProps {
   skills: Skill[]
+  skillsTop: string[]
 }
 
-const SKILL_COLORS: Record<string, string> = {
-  // Languages
-  'C++':        'bg-blue-500/10 text-blue-400 border-blue-500/20',
-  'Python':     'bg-yellow-500/10 text-yellow-400 border-yellow-500/20',
-  'JavaScript': 'bg-yellow-300/10 text-yellow-200 border-yellow-300/20',
-  'TypeScript': 'bg-blue-400/10 text-blue-300 border-blue-400/20',
-  'Java':       'bg-orange-500/10 text-orange-400 border-orange-500/20',
-  'Go':         'bg-purple-500/10 text-purple-400 border-purple-500/20',
-  // Frameworks
-  'React':      'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
-  'Next.js':    'bg-white/5 text-gray-200 border-gray-600',
-  'Node.js':    'bg-green-500/10 text-green-400 border-green-500/20',
-  'Express':    'bg-red-500/10 text-red-400 border-red-500/20',
-  'Tailwind CSS': 'bg-teal-500/10 text-teal-400 border-teal-500/20',
-  'GraphQL':    'bg-pink-500/10 text-pink-400 border-pink-500/20',
-  // Tools
-  'Docker':     'bg-blue-600/10 text-blue-400 border-blue-600/20',
-  'Kubernetes': 'bg-blue-300/10 text-blue-200 border-blue-300/20',
-  'AWS':        'bg-orange-600/10 text-orange-400 border-orange-600/20',
-  'Git':        'bg-white/5 text-gray-200 border-gray-600',
-  'PostgreSQL': 'bg-indigo-500/10 text-indigo-400 border-indigo-500/20',
-  'MongoDB':    'bg-green-600/10 text-green-400 border-green-600/20',
-}
+export default function Skills({ skills, skillsTop }: SkillsProps) {
+  const grouped = groupByCategory(skills)
+  const cats = Object.keys(grouped)
+  const [activeCat, setActiveCat] = useState(cats[0] ?? '')
 
-const DEFAULT_SKILL_COLOR = 'bg-primary/10 text-primary border-primary/20'
-
-export function Skills({ skills }: SkillsProps) {
-  const grouped = skills.reduce<Record<string, Skill[]>>((acc, skill) => {
-    const cat = skill.category || 'Other'
-    acc[cat] = [...(acc[cat] ?? []), skill]
-    return acc
-  }, {})
+  const marqueeItems = skillsTop.length ? skillsTop : cats.flatMap((c) => grouped[c].map((s) => s.name))
+  const doubled = [...marqueeItems, ...marqueeItems]
 
   return (
-    <div className="flex flex-col gap-8">
-      <h3 className="text-2xl font-bold text-white mb-0 flex items-center gap-3">
-        <span className="material-symbols-outlined text-primary">build</span>
-        Technical Expertise
-      </h3>
-      {Object.entries(grouped).map(([category, items]) => (
-        <div key={category} className="bg-[#16282c]/50 border border-[#224249] rounded-xl p-6">
-          <h4 className="text-sm uppercase tracking-wider text-gray-400 font-bold mb-4">{category}</h4>
-          <div className="flex flex-wrap gap-2">
-            {items.map((skill) => {
-              const colorClass = SKILL_COLORS[skill.name] ?? DEFAULT_SKILL_COLOR
-              return (
-                <span
-                  key={skill.name}
-                  className={`px-3 py-1.5 rounded-md text-sm font-medium border ${colorClass}`}
-                >
-                  {skill.name}
-                </span>
-              )
-            })}
+    <section className="section container" id="skills">
+      <div className="section-head">
+        <div>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 02 — Toolbox</div>
+          <h2>Key skills</h2>
+        </div>
+        <div className="idx">
+          {skills.length} entries / {cats.length} domains
+        </div>
+      </div>
+
+      <div className="skills-wrap">
+        <div className="skills-cats">
+          {cats.map((c) => (
+            <button
+              key={c}
+              className={`skills-cat ${c === activeCat ? 'active' : ''}`}
+              onClick={() => setActiveCat(c)}
+            >
+              {c}
+              <span className="n">{String(grouped[c].length).padStart(2, '0')}</span>
+            </button>
+          ))}
+        </div>
+        <div className="skills-cloud">
+          {(grouped[activeCat] ?? []).map((s) => (
+            <SkillPill key={s.id} skill={s} />
+          ))}
+        </div>
+      </div>
+
+      {doubled.length > 0 && (
+        <div className="marquee">
+          <div className="marquee-track">
+            {doubled.map((s, i) => (
+              <div className="marquee-item" key={i}>
+                <span className="star">✦</span>
+                <span>{s}</span>
+              </div>
+            ))}
           </div>
         </div>
-      ))}
-    </div>
+      )}
+    </section>
   )
 }

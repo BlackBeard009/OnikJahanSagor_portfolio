@@ -1,18 +1,15 @@
-import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { AdminNav } from '@/components/admin/AdminNav'
-import { SessionProvider } from 'next-auth/react'
+import { auth } from '@/lib/auth'
+import AdminNav from '@/components/admin/AdminNav'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
   if (!session) redirect('/admin/login')
 
   return (
-    <SessionProvider>
-      <div className="flex min-h-screen bg-dark">
-        <AdminNav />
-        <main className="flex-1 p-8 overflow-auto">{children}</main>
-      </div>
-    </SessionProvider>
+    <div className="admin-shell" data-theme="dark">
+      <AdminNav email={session.user?.email ?? ''} />
+      <main className="admin-content">{children}</main>
+    </div>
   )
 }
