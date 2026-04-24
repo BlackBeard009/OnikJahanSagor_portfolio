@@ -36,8 +36,8 @@ CREATE TABLE profile (
   skills_top jsonb DEFAULT '[]'
 );
 
--- Insert default row so GET always returns a row
-INSERT INTO profile (id) VALUES (gen_random_uuid());
+-- Insert default row so GET always returns a row (idempotent)
+INSERT INTO profile (id) VALUES (gen_random_uuid()) ON CONFLICT DO NOTHING;
 
 -- Online judge platforms
 CREATE TABLE judges (
