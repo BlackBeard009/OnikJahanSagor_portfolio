@@ -1,5 +1,5 @@
-const { fetch, Request, Response, Headers, FormData } = require('undici')
+const { TextDecoder, TextEncoder } = require('util')
+Object.assign(globalThis, { TextDecoder, TextEncoder })
 
-console.log('[polyfill] Setting up fetch globals')
+const { fetch, Request, Response, Headers, FormData } = require('undici')
 Object.assign(globalThis, { fetch, Request, Response, Headers, FormData })
-console.log('[polyfill] Done, Request is:', typeof globalThis.Request)
