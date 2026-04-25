@@ -16,7 +16,7 @@ import Writing from '@/components/sections/Writing'
 import Certifications from '@/components/sections/Certifications'
 import Footer from '@/components/sections/Footer'
 
-export const dynamic = 'force-dynamic'
+export const revalidate = 60
 
 export default async function HomePage() {
   const [profile, judges, contests, skills, career, projects, posts, certs] =
