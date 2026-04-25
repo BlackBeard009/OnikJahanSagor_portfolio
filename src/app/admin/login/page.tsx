@@ -29,7 +29,9 @@ export default async function AdminLoginPage({
 
         {error && (
           <div className="admin-login-error">
-            Access denied. This Google account is not authorised.
+            {error === 'AccessDenied'
+              ? 'Access denied. This Google account is not authorised.'
+              : `Auth error: ${error}`}
           </div>
         )}
 

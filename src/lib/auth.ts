@@ -13,8 +13,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     }),
   ],
   callbacks: {
-    async signIn({ profile }) {
-      return isAdminEmail(profile?.email)
+    async signIn({ user, profile }) {
+      return isAdminEmail(user?.email) || isAdminEmail(profile?.email)
     },
     async session({ session }) {
       return session
