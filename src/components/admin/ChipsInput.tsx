@@ -8,32 +8,37 @@ interface ChipsInputProps {
   placeholder?: string
 }
 
-export default function ChipsInput({ label, value, onChange, placeholder = 'Add...' }: ChipsInputProps) {
+export default function ChipsInput({ label, value, onChange, placeholder = 'Add and press Enter' }: ChipsInputProps) {
   const [draft, setDraft] = useState('')
 
-  function add() {
+  const add = () => {
     const v = draft.trim()
-    if (v && !value.includes(v)) onChange([...value, v])
+    if (!v) return
+    onChange([...value, v])
     setDraft('')
   }
 
+  const remove = (i: number) => onChange(value.filter((_, j) => j !== i))
+
   return (
-    <div className="field-group">
-      <div className="field-label">{label}</div>
-      <div className="chips-wrap">
-        {value.map((chip) => (
-          <span key={chip} className="chip-tag">
+    <div className="form-row">
+      <label>{label}</label>
+      <div className="chips-input">
+        {value.map((chip, i) => (
+          <span key={i} className="chip">
             {chip}
-            <button onClick={() => onChange(value.filter((c) => c !== chip))} aria-label={`Remove ${chip}`}>×</button>
+            <button type="button" onClick={() => remove(i)} aria-label={`Remove ${chip}`}>×</button>
           </span>
         ))}
         <input
-          className="field-input"
-          style={{ width: 140, flex: 'none' }}
           value={draft}
           placeholder={placeholder}
-          onChange={(e) => setDraft(e.target.value)}
-          onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); add() } }}
+          onChange={e => setDraft(e.target.value)}
+          onKeyDown={e => {
+            if (e.key === 'Enter') { e.preventDefault(); add() }
+            if (e.key === 'Backspace' && !draft && value.length) onChange(value.slice(0, -1))
+          }}
+          onBlur={add}
         />
       </div>
     </div>

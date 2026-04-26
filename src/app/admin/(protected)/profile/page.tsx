@@ -3,10 +3,5 @@ import ProfilePanel from '@/components/admin/ProfilePanel'
 
 export default async function AdminProfilePage() {
   const profile = await getProfile()
-  return (
-    <>
-      <h1 className="admin-page-title">Profile</h1>
-      <ProfilePanel initial={profile} />
-    </>
-  )
+  return <ProfilePanel initial={profile} />
 }

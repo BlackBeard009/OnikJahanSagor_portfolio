@@ -7,9 +7,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   if (!session) redirect('/admin/login')
 
   return (
-    <div className="admin-shell" data-theme="dark">
+    <div className="app" data-theme="dark">
       <AdminNav email={session.user?.email ?? ''} />
-      <main className="admin-content">{children}</main>
+      <main className="main">{children}</main>
     </div>
   )
 }
