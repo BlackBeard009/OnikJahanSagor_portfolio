@@ -3,41 +3,48 @@ import { useState, useRef } from 'react'
 import type { Project, ProjectBullet } from '@/types'
 import ChipsInput from './ChipsInput'
 
-const EMPTY: Omit<Project, 'id'> = {
-  num: '', title: '', tagline: '', description: '',
-  bullets: [], stack: [], github_url: '', live_url: '', images: [], order: 0
-}
-
-function BulletsEditor({ value, onChange }: { value: ProjectBullet[], onChange: (v: ProjectBullet[]) => void }) {
-  const [label, setLabel] = useState('')
-  const [text, setText] = useState('')
-
-  const add = () => {
-    if (!label.trim() && !text.trim()) return
-    onChange([...value, { b: label.trim(), t: text.trim() }])
-    setLabel('')
-    setText('')
-  }
-
+function ConfirmModal({ title, body, onCancel, onConfirm }: {
+  title: string; body: string; onCancel: () => void; onConfirm: () => void
+}) {
   return (
-    <div>
-      {value.map((b, i) => (
-        <div key={i} style={{ display: 'flex', gap: 8, marginBottom: 6, fontSize: 13 }}>
-          <span style={{ fontWeight: 600, minWidth: 80 }}>{b.b}:</span>
-          <span style={{ flex: 1, color: 'var(--ink-2)' }}>{b.t}</span>
-          <button className="btn ghost" style={{ fontSize: 11 }} onClick={() => onChange(value.filter((_, j) => j !== i))}>×</button>
+    <div className="modal-wrap" onClick={onCancel}>
+      <div className="modal" onClick={e => e.stopPropagation()}>
+        <h3>{title}</h3>
+        <p>{body}</p>
+        <div className="actions">
+          <button className="btn ghost" onClick={onCancel}>cancel</button>
+          <button className="btn danger" onClick={onConfirm}>delete</button>
         </div>
-      ))}
-      <div style={{ display: 'flex', gap: 6, marginTop: 8 }}>
-        <input className="admin-input" style={{ width: 100 }} placeholder="Label" value={label} onChange={e => setLabel(e.target.value)} />
-        <input className="admin-input" style={{ flex: 1 }} placeholder="Text" value={text} onChange={e => setText(e.target.value)} onKeyDown={e => e.key === 'Enter' && add()} />
-        <button className="btn ghost" onClick={add}>+</button>
       </div>
     </div>
   )
 }
 
-function ImagesEditor({ value, onChange }: { value: string[], onChange: (v: string[]) => void }) {
+function BulletsEditor({ values, onChange }: { values: ProjectBullet[]; onChange: (v: ProjectBullet[]) => void }) {
+  const set = (i: number, k: keyof ProjectBullet, v: string) => {
+    const next = [...values]; next[i] = { ...next[i], [k]: v }; onChange(next)
+  }
+  const add = () => onChange([...values, { b: '', t: '' }])
+  const remove = (i: number) => onChange(values.filter((_, j) => j !== i))
+
+  return (
+    <div className="form-row">
+      <label>Tech details</label>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
+        {values.map((b, i) => (
+          <div key={i} style={{ display: 'grid', gridTemplateColumns: '140px 1fr auto', gap: 6 }}>
+            <input value={b.b || ''} onChange={e => set(i, 'b', e.target.value)} placeholder="Label" style={{ fontFamily: 'var(--font-mono)', fontSize: 12, padding: '8px 10px', border: '1px solid var(--line)', background: 'var(--bg)', color: 'var(--ink)', borderRadius: 2, outline: 'none' }} />
+            <input value={b.t || ''} onChange={e => set(i, 't', e.target.value)} placeholder="Detail" style={{ padding: '8px 10px', border: '1px solid var(--line)', background: 'var(--bg)', color: 'var(--ink)', borderRadius: 2, outline: 'none' }} />
+            <button className="btn small danger" onClick={() => remove(i)}>×</button>
+          </div>
+        ))}
+      </div>
+      <button className="add-btn" style={{ marginTop: 8 }} onClick={add}>+ add detail</button>
+    </div>
+  )
+}
+
+function ImagesEditor({ value, onChange }: { value: string[]; onChange: (v: string[]) => void }) {
   const [uploading, setUploading] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
@@ -57,7 +64,8 @@ function ImagesEditor({ value, onChange }: { value: string[], onChange: (v: stri
   }
 
   return (
-    <div>
+    <div className="form-row">
+      <label>Images</label>
       <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 8 }}>
         {value.map((url, i) => (
           <div key={i} style={{ position: 'relative' }}>
@@ -69,121 +77,173 @@ function ImagesEditor({ value, onChange }: { value: string[], onChange: (v: stri
       </div>
       <input ref={fileRef} type="file" accept="image/*" multiple style={{ display: 'none' }} onChange={e => handleFiles(e.target.files)} />
       <button className="btn ghost" disabled={uploading} onClick={() => fileRef.current?.click()}>
-        {uploading ? 'Uploading…' : '+ Add Images'}
+        {uploading ? 'Uploading…' : '+ add images'}
       </button>
     </div>
   )
 }
 
-function ProjectModal({ initial, onSave, onClose }: {
-  initial: Omit<Project, 'id'>
-  onSave: (data: Omit<Project, 'id'>) => void
-  onClose: () => void
-}) {
-  const [form, setForm] = useState(initial)
-  const set = (k: keyof typeof form) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>
-    setForm(prev => ({ ...prev, [k]: k === 'order' ? Number((e.target as HTMLInputElement).value) : e.target.value }))
-
-  return (
-    <div className="admin-modal-overlay">
-      <div className="admin-modal" style={{ maxWidth: 640 }}>
-        <div className="admin-modal-header">
-          <span>{form.title ? 'Edit Project' : 'Add Project'}</span>
-          <button className="icon-btn" onClick={onClose}>✕</button>
-        </div>
-        <div className="admin-form" style={{ overflowY: 'auto', maxHeight: '72vh' }}>
-          <label className="admin-label">Number (e.g. "01")</label>
-          <input className="admin-input" value={form.num ?? ''} onChange={set('num')} />
-          <label className="admin-label">Title</label>
-          <input className="admin-input" value={form.title ?? ''} onChange={set('title')} />
-          <label className="admin-label">Tagline (serif italic)</label>
-          <input className="admin-input" value={form.tagline ?? ''} onChange={set('tagline')} />
-          <label className="admin-label">Description</label>
-          <textarea className="admin-input" rows={3} value={form.description ?? ''} onChange={set('description')} />
-          <label className="admin-label">Bullets (label + text pairs)</label>
-          <BulletsEditor value={form.bullets} onChange={bullets => setForm(prev => ({ ...prev, bullets }))} />
-          <label className="admin-label" style={{ marginTop: 12 }}>Stack</label>
-          <ChipsInput label="" value={form.stack} onChange={stack => setForm(prev => ({ ...prev, stack }))} placeholder="Add tech (Enter)" />
-          <label className="admin-label">GitHub URL</label>
-          <input className="admin-input" value={form.github_url ?? ''} onChange={set('github_url')} />
-          <label className="admin-label">Live URL</label>
-          <input className="admin-input" value={form.live_url ?? ''} onChange={set('live_url')} />
-          <label className="admin-label">Images</label>
-          <ImagesEditor value={form.images} onChange={images => setForm(prev => ({ ...prev, images }))} />
-          <label className="admin-label">Order</label>
-          <input className="admin-input" type="number" value={form.order} onChange={set('order')} />
-        </div>
-        <div className="admin-modal-footer">
-          <button className="btn ghost" onClick={onClose}>Cancel</button>
-          <button className="btn primary" onClick={() => onSave(form)}>Save</button>
-        </div>
-      </div>
-    </div>
-  )
+const EMPTY: Omit<Project, 'id'> = {
+  num: '', title: '', tagline: '', description: '',
+  bullets: [], stack: [], github_url: '', live_url: '', images: [], order: 0
 }
 
 export default function ProjectsPanel({ initial }: { initial: Project[] }) {
   const [projects, setProjects] = useState(initial)
-  const [editing, setEditing] = useState<Project | null>(null)
-  const [adding, setAdding] = useState(false)
+  const [open, setOpen] = useState<string | null>(null)
+  const [editing, setEditing] = useState<Record<string, Partial<Project>>>({})
+  const [confirm, setConfirm] = useState<string | null>(null)
+  const [saving, setSaving] = useState<string | null>(null)
+  const [toast, setToast] = useState<string | null>(null)
+
+  const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(null), 2200) }
 
   const sorted = [...projects].sort((a, b) => a.order - b.order)
+  const getForm = (p: Project) => ({ ...p, ...(editing[p.id] ?? {}) }) as Project
 
-  const handleSave = async (data: Omit<Project, 'id'>) => {
-    if (editing) {
-      const res = await fetch(`/api/admin/projects/${editing.id}`, {
-        method: 'PUT', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      const updated: Project = await res.json()
-      setProjects(prev => prev.map(p => p.id === editing.id ? updated : p))
-      setEditing(null)
-    } else {
-      const res = await fetch('/api/admin/projects', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      })
-      const created: Project = await res.json()
-      setProjects(prev => [...prev, created])
-      setAdding(false)
-    }
+  const setField = (id: string, patch: Partial<Project>) =>
+    setEditing(prev => ({ ...prev, [id]: { ...(prev[id] ?? {}), ...patch } }))
+
+  const save = async (p: Project) => {
+    const form = getForm(p)
+    setSaving(p.id)
+    const res = await fetch(`/api/admin/projects/${p.id}`, {
+      method: 'PUT', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(form),
+    })
+    if (!res.ok) { showToast('Failed to save'); setSaving(null); return }
+    setProjects(prev => prev.map(pp => pp.id === p.id ? form : pp))
+    setEditing(prev => { const n = { ...prev }; delete n[p.id]; return n })
+    setSaving(null)
+    setOpen(null)
+    showToast('Saved')
   }
 
-  const handleDelete = async (id: string) => {
-    if (!confirm('Delete this project?')) return
+  const add = async () => {
+    const num = String(projects.length + 1).padStart(2, '0')
+    const res = await fetch('/api/admin/projects', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...EMPTY, num, order: projects.length }),
+    })
+    if (!res.ok) { showToast('Failed to add'); return }
+    const created: Project = await res.json()
+    setProjects(prev => [...prev, created])
+    setOpen(created.id)
+    showToast('Project added')
+  }
+
+  const remove = async (id: string) => {
     await fetch(`/api/admin/projects/${id}`, { method: 'DELETE' })
     setProjects(prev => prev.filter(p => p.id !== id))
+    setConfirm(null)
+    if (open === id) setOpen(null)
+    showToast('Deleted')
   }
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: 16 }}>
-        <button className="btn primary" onClick={() => setAdding(true)}>+ Add Project</button>
+      <div className="main-head">
+        <div>
+          <div className="eyebrow">§ projects</div>
+          <h1>Personal projects</h1>
+          <p>Each project shows a description, stack chips, GitHub link, and image gallery.</p>
+        </div>
+        <button className="btn primary" onClick={add}>+ add project</button>
       </div>
-      <div className="admin-list">
-        {sorted.map(p => (
-          <div key={p.id} className="admin-list-item">
-            <div>
-              {p.num && <span className="eyebrow" style={{ marginRight: 8 }}>{p.num}</span>}
-              <strong>{p.title}</strong>
-              {p.tagline && <div style={{ color: 'var(--ink-3)', fontSize: 12 }}>{p.tagline}</div>}
-              {p.images.length > 0 && <div style={{ color: 'var(--ink-4)', fontSize: 11 }}>{p.images.length} image{p.images.length !== 1 ? 's' : ''}</div>}
+
+      {sorted.length === 0 && (
+        <div className="empty">
+          <div className="big">No projects yet</div>
+          <div className="sub">Add your first project</div>
+        </div>
+      )}
+
+      {sorted.map(p => {
+        const form = getForm(p)
+        const expanded = open === p.id
+        return (
+          <div key={p.id} className="row-card">
+            <div className="summary">
+              <div className="info">
+                <span className="drag-handle">⋮⋮</span>
+                <div>
+                  <div className="title">
+                    {p.num ? `${p.num} · ` : ''}{p.title}
+                    {p.github_url && <span className="tag-pill good">repo</span>}
+                    <span className="tag-pill">{(p.stack || []).length} tech</span>
+                  </div>
+                  <div className="sub">{p.tagline || '—'}</div>
+                </div>
+              </div>
+              <div className="actions">
+                <button className="btn small" onClick={() => setOpen(expanded ? null : p.id)}>
+                  {expanded ? 'close' : 'edit'}
+                </button>
+                <button className="btn small danger" onClick={() => setConfirm(p.id)}>delete</button>
+              </div>
             </div>
-            <div className="admin-item-actions">
-              <button className="btn ghost" onClick={() => setEditing(p)}>Edit</button>
-              <button className="btn ghost" style={{ color: 'var(--red)' }} onClick={() => handleDelete(p.id)}>Delete</button>
-            </div>
+
+            {expanded && (
+              <div className="editor">
+                <div className="form-grid">
+                  <div className="form-row">
+                    <label>Number</label>
+                    <input className="mono" value={form.num ?? ''} placeholder="01" onChange={e => setField(p.id, { num: e.target.value })} />
+                  </div>
+                  <div className="form-row">
+                    <label>Title</label>
+                    <input value={form.title ?? ''} onChange={e => setField(p.id, { title: e.target.value })} />
+                  </div>
+                  <div className="full form-row">
+                    <label>Tagline</label>
+                    <input value={form.tagline ?? ''} placeholder="One-line pitch" onChange={e => setField(p.id, { tagline: e.target.value })} />
+                  </div>
+                  <div className="full form-row">
+                    <label>Description</label>
+                    <textarea rows={4} value={form.description ?? ''} onChange={e => setField(p.id, { description: e.target.value })} />
+                  </div>
+                  <div className="full">
+                    <BulletsEditor values={form.bullets || []} onChange={v => setField(p.id, { bullets: v })} />
+                  </div>
+                  <div className="full">
+                    <ChipsInput label="Tech stack" value={form.stack || []} onChange={v => setField(p.id, { stack: v })} />
+                  </div>
+                  <div className="form-row">
+                    <label>GitHub URL</label>
+                    <input className="mono" value={form.github_url ?? ''} onChange={e => setField(p.id, { github_url: e.target.value })} />
+                  </div>
+                  <div className="form-row">
+                    <label>Live URL</label>
+                    <input className="mono" value={form.live_url ?? ''} onChange={e => setField(p.id, { live_url: e.target.value })} />
+                  </div>
+                  <div className="full">
+                    <ImagesEditor value={form.images || []} onChange={v => setField(p.id, { images: v })} />
+                  </div>
+                </div>
+                <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                  <button className="btn primary" onClick={() => save(p)} disabled={saving === p.id}>
+                    {saving === p.id ? 'saving…' : 'save'}
+                  </button>
+                  <button className="btn ghost" onClick={() => { setOpen(null); setEditing(prev => { const n = { ...prev }; delete n[p.id]; return n }) }}>
+                    discard
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        ))}
-        {sorted.length === 0 && <div style={{ color: 'var(--ink-3)', padding: '24px 0' }}>No projects yet.</div>}
-      </div>
-      {(adding || editing) && (
-        <ProjectModal
-          initial={editing ? { num: editing.num, title: editing.title, tagline: editing.tagline, description: editing.description, bullets: editing.bullets, stack: editing.stack, github_url: editing.github_url, live_url: editing.live_url, images: editing.images, order: editing.order } : EMPTY}
-          onSave={handleSave}
-          onClose={() => { setAdding(false); setEditing(null) }}
+        )
+      })}
+
+      {confirm && (
+        <ConfirmModal
+          title="Delete project?"
+          body={`"${projects.find(p => p.id === confirm)?.title}" will be removed.`}
+          onCancel={() => setConfirm(null)}
+          onConfirm={() => remove(confirm)}
         />
       )}
+
+      {toast && <div className="toast"><span className="dot" /><span>{toast}</span></div>}
     </>
   )
 }

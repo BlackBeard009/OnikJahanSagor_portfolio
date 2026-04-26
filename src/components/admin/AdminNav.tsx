@@ -1,61 +1,55 @@
 'use client'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
-  User, Gauge, Trophy, Star, Briefcase, FolderOpen,
-  PenLine, Award, LayoutDashboard, LogOut
-} from 'lucide-react'
 import { signOut } from 'next-auth/react'
 
-const links = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/profile', label: 'Profile', icon: User },
-  { href: '/admin/judges', label: 'Judges', icon: Gauge },
-  { href: '/admin/contests', label: 'Contests', icon: Trophy },
-  { href: '/admin/skills', label: 'Skills', icon: Star },
-  { href: '/admin/career', label: 'Career', icon: Briefcase },
-  { href: '/admin/projects', label: 'Projects', icon: FolderOpen },
-  { href: '/admin/posts', label: 'Posts', icon: PenLine },
-  { href: '/admin/certifications', label: 'Certifications', icon: Award },
+const sections = [
+  { href: '/admin', label: 'Dashboard', n: '00' },
+  { href: '/admin/profile', label: 'Profile', n: '01' },
+  { href: '/admin/judges', label: 'Judge ratings', n: '02' },
+  { href: '/admin/contests', label: 'Contests', n: '03' },
+  { href: '/admin/skills', label: 'Skills', n: '04' },
+  { href: '/admin/career', label: 'Career timeline', n: '05' },
+  { href: '/admin/projects', label: 'Projects', n: '06' },
+  { href: '/admin/posts', label: 'Writing', n: '07' },
+  { href: '/admin/certifications', label: 'Certifications', n: '08' },
 ]
 
 export default function AdminNav({ email }: { email: string }) {
   const pathname = usePathname()
 
   return (
-    <aside className="admin-sidebar">
-      <div className="admin-sidebar-brand">
-        <span className="mark">◉ ADMIN</span>
-        <span style={{ color: 'var(--ink-4)' }}>portfolio cms</span>
+    <aside className="side">
+      <div className="side-brand">
+        <div className="mk">OJ</div>
+        <div className="brand-title">portfolio<span className="dim">.admin</span></div>
       </div>
 
-      <nav className="admin-nav-links">
-        {links.map(({ href, label, icon: Icon }) => {
-          const active = href === '/admin'
-            ? pathname === '/admin'
-            : pathname.startsWith(href)
-          return (
-            <Link
-              key={href}
-              href={href}
-              className={`admin-nav-link${active ? ' active' : ''}`}
-            >
-              <Icon size={14} />
-              {label}
-            </Link>
-          )
-        })}
-      </nav>
+      <div className="side-eyebrow">Sections</div>
+      {sections.map(({ href, label, n }) => {
+        const active = href === '/admin' ? pathname === '/admin' : pathname.startsWith(href)
+        return (
+          <Link key={href} href={href} className={`nav-item${active ? ' active' : ''}`}>
+            <span>{label}</span>
+            <span className="n">{n}</span>
+          </Link>
+        )
+      })}
 
-      <div className="admin-sidebar-footer">
-        <div className="email">{email}</div>
+      <div className="side-footer">
+        <div style={{ fontFamily: 'var(--font-mono)', fontSize: 11, color: 'var(--ink-3)', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+          {email}
+        </div>
         <button
-          className="admin-signout-btn"
+          className="btn ghost"
+          style={{ width: '100%', justifyContent: 'center' }}
           onClick={() => signOut({ callbackUrl: '/admin/login' })}
         >
-          <LogOut size={11} style={{ display: 'inline', marginRight: 6 }} />
-          Sign out
+          sign out
         </button>
+        <Link className="btn ghost" href="/" style={{ textAlign: 'center', justifyContent: 'center' }}>
+          ← view portfolio
+        </Link>
       </div>
     </aside>
   )
