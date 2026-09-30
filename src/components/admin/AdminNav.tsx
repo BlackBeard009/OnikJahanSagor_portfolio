@@ -13,6 +13,7 @@ const sections = [
   { href: '/admin/projects', label: 'Projects', n: '06' },
   { href: '/admin/posts', label: 'Writing', n: '07' },
   { href: '/admin/certifications', label: 'Certifications', n: '08' },
+  { href: '/admin/publications', label: 'Publications', n: '09' },
 ]
 
 export default function AdminNav({ email }: { email: string }) {

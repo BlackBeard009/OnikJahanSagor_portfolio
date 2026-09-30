@@ -397,6 +397,34 @@ body {
 .cert-card .cert-date { font-family: var(--font-mono); font-size: 11px; color: var(--ink-4); }
 .cert-card .cert-desc { font-size: 13px; color: var(--ink-3); line-height: 1.5; }
 
+/* ---- Research & publications ---- */
+.research-intro { display: grid; grid-template-columns: 1.6fr 1fr; gap: 40px; margin-bottom: 40px; }
+@media (max-width: 860px) { .research-intro { grid-template-columns: 1fr; gap: 24px; } }
+.research-summary { font-size: 17px; line-height: 1.65; color: var(--ink-2); margin: 0; }
+.research-side { display: flex; flex-direction: column; gap: 14px; }
+.research-interests { display: flex; flex-wrap: wrap; gap: 6px; }
+.pub-list { display: flex; flex-direction: column; gap: 16px; }
+.pub { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+.pub.featured { border-left: 2px solid var(--accent); }
+.pub-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.06em; text-transform: uppercase; }
+.pub-meta .dim { color: var(--ink-4); }
+.pub-status { padding: 2px 8px; border: 1px solid currentColor; border-radius: 2px; }
+.pub-status.s-published, .pub-status.s-accepted { color: var(--good); }
+.pub-status.s-under_review { color: var(--hot); }
+.pub-status.s-preprint { color: var(--accent-ink); }
+.pub-status.s-in_preparation, .pub-status.s-thesis { color: var(--purple); }
+.pub-title { font-size: 19px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.35; margin: 0; }
+.pub-authors { font-size: 14px; color: var(--ink-3); }
+.pub-authors .me { color: var(--ink); font-weight: 600; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 3px; }
+.pub-highlights { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 6px; font-size: 14px; color: var(--ink-2); line-height: 1.5; }
+.pub-highlights li::marker { color: var(--accent); }
+.pub-abstract summary { cursor: pointer; font-family: var(--font-mono); font-size: 11px; color: var(--ink-3); letter-spacing: 0.08em; text-transform: uppercase; width: fit-content; }
+.pub-abstract summary:hover { color: var(--ink); }
+.pub-abstract p { font-size: 14px; color: var(--ink-2); line-height: 1.65; margin: 10px 0 0; }
+.pub-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.pub-links { display: flex; flex-wrap: wrap; gap: 8px; }
+.pub-links .btn { padding: 6px 10px; font-size: 11px; }
+
 /* ---- Footer ---- */
 footer { margin-top: 80px; padding: 64px 0 32px; border-top: 1px solid var(--line); position: relative; }
 .footer-grid { display: grid; grid-template-columns: 1.6fr 1fr 1fr; gap: 48px; margin-bottom: 48px; }

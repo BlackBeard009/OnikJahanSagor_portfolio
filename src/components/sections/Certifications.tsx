@@ -8,7 +8,7 @@ export default function Certifications({ certs }: { certs: Certification[] }) {
     <section className="section container" id="certifications">
       <div className="section-head">
         <div>
-          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 06 — Credentials</div>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 07 — Credentials</div>
           <h2>Certifications</h2>
         </div>
         <div className="idx">{certs.length} credentials</div>

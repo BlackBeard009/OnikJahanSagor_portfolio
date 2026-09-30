@@ -96,6 +96,19 @@ export default function ProfilePanel({ initial }: { initial: Profile }) {
               placeholder="Add skill and press Enter"
             />
           </div>
+          <div className="full">
+            <Field label="Research summary (shown atop the Research section)" value={form.research_summary} onChange={v => set('research_summary', v)} multiline placeholder="I study how vision-language models can be adapted to low-resource languages…" />
+          </div>
+          <div className="full">
+            <ChipsInput
+              label="Research interests"
+              value={form.research_interests ?? []}
+              onChange={v => set('research_interests', v)}
+              placeholder="Add interest and press Enter"
+            />
+          </div>
+          <Field label="Google Scholar URL" mono value={form.scholar_url} onChange={v => set('scholar_url', v)} />
+          <Field label="ORCID URL" mono value={form.orcid_url} onChange={v => set('orcid_url', v)} />
         </div>
       </div>
 

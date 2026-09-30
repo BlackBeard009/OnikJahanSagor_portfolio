@@ -40,7 +40,7 @@ export default function Skills({ skills, skillsTop }: SkillsProps) {
     <section className="section container" id="skills">
       <div className="section-head">
         <div>
-          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 02 — Toolbox</div>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 03 — Toolbox</div>
           <h2>Key skills</h2>
         </div>
         <div className="idx">

@@ -10,6 +10,7 @@ export async function getProfile(): Promise<Profile> {
       location: '', timezone: '', status: '', years: 0,
       email: '', bio: '', github: '', linkedin: '', twitter: '',
       resume_url: '', avatar_url: '', skills_top: [],
+      research_summary: '', research_interests: [], scholar_url: '', orcid_url: '',
     }
   }
   return data as Profile

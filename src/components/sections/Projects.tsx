@@ -84,7 +84,7 @@ export default function Projects({ projects }: { projects: Project[] }) {
     <section className="section container" id="projects">
       <div className="section-head">
         <div>
-          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 04 — Things I&apos;ve made</div>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 05 — Things I&apos;ve made</div>
           <h2>Personal projects</h2>
         </div>
         <div className="idx">{projects.length} projects</div>
