@@ -32,7 +32,7 @@ export default function Footer({ profile }: { profile: Profile }) {
 
         {/* Big CTA */}
         <div>
-          <div className="eyebrow" style={{ marginBottom: 20 }}>§ 07 — Ping</div>
+          <div className="eyebrow" style={{ marginBottom: 20 }}>§ 08 — Ping</div>
           <div className="footer-big">
             Have something{' '}
             <span style={{ fontFamily: 'var(--font-serif)', fontStyle: 'italic', color: 'var(--ink-3)' }}>

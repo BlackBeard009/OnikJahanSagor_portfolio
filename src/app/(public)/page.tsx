@@ -6,8 +6,10 @@ import { getCareer } from '@/lib/db/career'
 import { getProjects } from '@/lib/db/projects'
 import { getPublishedPosts } from '@/lib/db/posts'
 import { getCertifications } from '@/lib/db/certifications'
+import { getPublications } from '@/lib/db/publications'
 
 import Hero from '@/components/sections/Hero'
+import Research from '@/components/sections/Research'
 import Competitive from '@/components/sections/Competitive'
 import Skills from '@/components/sections/Skills'
 import Career from '@/components/sections/Career'
@@ -19,7 +21,7 @@ import Footer from '@/components/sections/Footer'
 export const revalidate = 60
 
 export default async function HomePage() {
-  const [profile, judges, contests, skills, career, projects, posts, certs] =
+  const [profile, judges, contests, skills, career, projects, posts, certs, pubs] =
     await Promise.all([
       getProfile(),
       getJudges(),
@@ -29,6 +31,8 @@ export default async function HomePage() {
       getProjects(),
       getPublishedPosts(),
       getCertifications(),
+      // Tolerate a missing table so the page renders before the migration runs
+      getPublications().catch(() => []),
     ])
 
   const teamContests = contests.filter((c) => c.type === 'team')
@@ -37,6 +41,7 @@ export default async function HomePage() {
   return (
     <main>
       <Hero profile={profile} />
+      <Research profile={profile} pubs={pubs} />
       <Competitive
         judges={judges}
         teamContests={teamContests}

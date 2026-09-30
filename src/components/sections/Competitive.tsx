@@ -83,7 +83,7 @@ export default function Competitive({ judges, teamContests, individualContests }
     <section className="section container" id="competitive">
       <div className="section-head">
         <div>
-          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 01 — The Sport</div>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 02 — The Sport</div>
           <h2>Competitive programming</h2>
         </div>
         <div className="idx">

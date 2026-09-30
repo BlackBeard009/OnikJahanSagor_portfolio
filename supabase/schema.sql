@@ -8,6 +8,7 @@ DROP TABLE IF EXISTS projects CASCADE;
 DROP TABLE IF EXISTS skills CASCADE;
 
 -- Drop new tables if re-running
+DROP TABLE IF EXISTS publications CASCADE;
 DROP TABLE IF EXISTS certifications CASCADE;
 DROP TABLE IF EXISTS posts CASCADE;
 DROP TABLE IF EXISTS career CASCADE;
@@ -33,7 +34,11 @@ CREATE TABLE profile (
   twitter text DEFAULT '',
   resume_url text DEFAULT '',
   avatar_url text DEFAULT '',
-  skills_top jsonb DEFAULT '[]'
+  skills_top jsonb DEFAULT '[]',
+  research_summary text DEFAULT '',
+  research_interests jsonb DEFAULT '[]',
+  scholar_url text DEFAULT '',
+  orcid_url text DEFAULT ''
 );
 
 -- Insert default row so GET always returns a row (idempotent)
@@ -135,6 +140,27 @@ CREATE TABLE certifications (
   created_at timestamptz DEFAULT now()
 );
 
+-- Publications
+CREATE TABLE publications (
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  title text NOT NULL,
+  authors jsonb DEFAULT '[]',
+  venue text DEFAULT '',
+  year text DEFAULT '',
+  status text DEFAULT 'preprint',
+  abstract text DEFAULT '',
+  highlights jsonb DEFAULT '[]',
+  tags jsonb DEFAULT '[]',
+  pdf_url text DEFAULT '',
+  arxiv_url text DEFAULT '',
+  doi_url text DEFAULT '',
+  code_url text DEFAULT '',
+  bibtex text DEFAULT '',
+  featured boolean DEFAULT false,
+  "order" int DEFAULT 0,
+  created_at timestamptz DEFAULT now()
+);
+
 -- RLS
 ALTER TABLE profile ENABLE ROW LEVEL SECURITY;
 ALTER TABLE judges ENABLE ROW LEVEL SECURITY;
@@ -144,6 +170,7 @@ ALTER TABLE career ENABLE ROW LEVEL SECURITY;
 ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
 ALTER TABLE posts ENABLE ROW LEVEL SECURITY;
 ALTER TABLE certifications ENABLE ROW LEVEL SECURITY;
+ALTER TABLE publications ENABLE ROW LEVEL SECURITY;
 
 -- Public read policies
 CREATE POLICY "Public read profile" ON profile FOR SELECT TO anon USING (true);
@@ -153,5 +180,6 @@ CREATE POLICY "Public read skills" ON skills FOR SELECT TO anon USING (true);
 CREATE POLICY "Public read career" ON career FOR SELECT TO anon USING (true);
 CREATE POLICY "Public read projects" ON projects FOR SELECT TO anon USING (true);
 CREATE POLICY "Public read certifications" ON certifications FOR SELECT TO anon USING (true);
+CREATE POLICY "Public read publications" ON publications FOR SELECT TO anon USING (true);
 -- Posts: only published visible to anon
 CREATE POLICY "Public read published posts" ON posts FOR SELECT TO anon USING (published = true);
