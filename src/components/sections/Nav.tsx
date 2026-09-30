@@ -19,13 +19,14 @@ export default async function Nav() {
         </div>
 
         <nav className="nav-links">
-          <a href="/#competitive"><span className="n">01</span>competitive</a>
-          <a href="/#skills"><span className="n">02</span>skills</a>
-          <a href="/#career"><span className="n">03</span>career</a>
-          <a href="/#projects"><span className="n">04</span>projects</a>
-          <a href="/#writing"><span className="n">05</span>writing</a>
-          <a href="/#certifications"><span className="n">06</span>certifications</a>
-          <a href="/#contact"><span className="n">07</span>contact</a>
+          <a href="/#research"><span className="n">01</span>research</a>
+          <a href="/#competitive"><span className="n">02</span>competitive</a>
+          <a href="/#skills"><span className="n">03</span>skills</a>
+          <a href="/#career"><span className="n">04</span>career</a>
+          <a href="/#projects"><span className="n">05</span>projects</a>
+          <a href="/#writing"><span className="n">06</span>writing</a>
+          <a href="/#certifications"><span className="n">07</span>certifications</a>
+          <a href="/#contact"><span className="n">08</span>contact</a>
         </nav>
 
         <div className="nav-right">

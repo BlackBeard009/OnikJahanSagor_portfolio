@@ -6,7 +6,7 @@ export default function Writing({ posts }: { posts: Post[] }) {
     <section className="section container" id="writing">
       <div className="section-head">
         <div>
-          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 05 — Notes</div>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 06 — Notes</div>
           <h2>Writing</h2>
         </div>
         <div className="idx">selected posts · read all →</div>

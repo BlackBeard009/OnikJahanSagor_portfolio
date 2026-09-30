@@ -18,6 +18,10 @@ export interface Profile {
   resume_url: string
   avatar_url: string
   skills_top: string[]
+  research_summary: string
+  research_interests: string[]
+  scholar_url: string
+  orcid_url: string
 }
 
 export interface Judge {
@@ -110,5 +114,26 @@ export interface Certification {
   date_label: string
   credential_url: string
   description: string
+  order: number
+}
+
+export type PublicationStatus = 'published' | 'accepted' | 'under_review' | 'preprint' | 'in_preparation' | 'thesis'
+
+export interface Publication {
+  id: string
+  title: string
+  authors: string[]
+  venue: string
+  year: string
+  status: PublicationStatus
+  abstract: string
+  highlights: string[]
+  tags: string[]
+  pdf_url: string
+  arxiv_url: string
+  doi_url: string
+  code_url: string
+  bibtex: string
+  featured: boolean
   order: number
 }

@@ -6,7 +6,7 @@ export default function Career({ entries }: { entries: CareerEntry[] }) {
     <section className="section container" id="career">
       <div className="section-head">
         <div>
-          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 03 — The Path</div>
+          <div className="eyebrow" style={{ marginBottom: 8 }}>§ 04 — The Path</div>
           <h2>Career timeline</h2>
         </div>
         <div className="idx">{entries.length} roles</div>

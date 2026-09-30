@@ -6,10 +6,11 @@ import { getCareer } from '@/lib/db/career'
 import { getProjects } from '@/lib/db/projects'
 import { getAllPosts } from '@/lib/db/posts'
 import { getCertifications } from '@/lib/db/certifications'
+import { getPublications } from '@/lib/db/publications'
 import Link from 'next/link'
 
 export default async function AdminDashboard() {
-  const [profile, judges, contests, skills, career, projects, posts, certs] = await Promise.all([
+  const [profile, judges, contests, skills, career, projects, posts, certs, pubs] = await Promise.all([
     getProfile(),
     getJudges(),
     getContests(),
@@ -18,6 +19,7 @@ export default async function AdminDashboard() {
     getProjects(),
     getAllPosts(),
     getCertifications(),
+    getPublications().catch(() => []),
   ])
 
   const sections = [
@@ -28,6 +30,7 @@ export default async function AdminDashboard() {
     { label: 'Projects', value: projects.length, n: '06', href: '/admin/projects' },
     { label: 'Posts', value: posts.length, sub: `${posts.filter(p => p.published).length} published`, n: '07', href: '/admin/posts' },
     { label: 'Certifications', value: certs.length, n: '08', href: '/admin/certifications' },
+    { label: 'Publications', value: pubs.length, n: '09', href: '/admin/publications' },
   ]
 
   return (
